@@ -1,0 +1,57 @@
+body {
+  font-size: 0.875rem; /* Smaller base font size */
+  padding: 20px;
+  height: 100%;
+}
+
+h5,
+h3 {
+  font-size: 1rem; /* Smaller heading sizes */
+}
+
+button,
+input,
+.form-check-label {
+  font-size: 0.875rem; /* Smaller font size for buttons, inputs, and labels */
+}
+
+button {
+  padding: 0.5rem; /* Reduce padding for buttons */
+}
+
+input[type="number"],
+input[type="range"] {
+  height: 1.5rem; /* Reduce height for inputs */
+  padding: 0.25rem; /* Reduce padding for inputs */
+}
+
+footer {
+  margin-top: 20px;
+  font-size: 0.75rem; /* Smaller font size for footer */
+  text-align: center;
+}
+
+footer a {
+  font-size: 0.75rem; /* Smaller font size for footer links */
+  padding: 0.25rem 0.5rem; /* Reduce padding for footer links */
+}
+
+.form-check-input {
+  width: 1rem; /* Smaller checkbox switch */
+  height: 1rem; /* Smaller checkbox switch */
+}
+
+.success-message,
+.permission-message {
+  font-size: 0.75rem; /* Smaller font size for messages */
+}
+
+.success-message {
+  color: green;
+  display: none; /* Initially hidden */
+}
+.permission-message {
+  color: green;
+  display: none; /* Initially hidden */
+  margin-bottom: 10px;
+}

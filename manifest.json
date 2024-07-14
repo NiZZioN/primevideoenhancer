@@ -1,0 +1,66 @@
+{
+  "manifest_version": 3,
+  "name": "PrimeAutoNext: Amazon Prime Video Enhancer",
+  "version": "1.2.8",
+  "description": "Automatically clicks the next episode or skip button after a set delay on Amazon Prime Video.",
+  "permissions": [ 
+    "notifications",
+    "scripting", 
+    "storage"
+],
+  "host_permissions": [
+    "*://*.amazon.com/*",
+    "*://*.amazon.co.uk/*",
+    "*://*.amazon.de/*",
+    "*://*.amazon.co.jp/*",
+    "*://*.amazon.in/*",
+    "*://*.amazon.fr/*",
+    "*://*.amazon.it/*",
+    "*://*.amazon.es/*",
+    "*://*.amazon.ca/*",
+    "*://*.amazon.com.mx/*",
+    "*://*.amazon.cn/*",
+    "*://*.amazon.com.au/*",
+    "*://*.amazon.ae/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.amazon.com/*",
+        "*://*.amazon.co.uk/*",
+        "*://*.amazon.de/*",
+        "*://*.amazon.co.jp/*",
+        "*://*.amazon.in/*",
+        "*://*.amazon.fr/*",
+        "*://*.amazon.it/*",
+        "*://*.amazon.es/*",
+        "*://*.amazon.ca/*",
+        "*://*.amazon.com.mx/*",
+        "*://*.amazon.cn/*",
+        "*://*.amazon.com.au/*",
+        "*://*.amazon.ae/*"
+      ],
+      "js": ["content.js"]
+    }
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "primevideoenhancer@nizzion.com",
+      "strict_min_version": "42.0"
+    }
+  }
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="./css/custom-bootstrap.css">
+    <link rel="stylesheet" href="./css/popup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body data-bs-theme="light">
+    <h5><img src="./icons/icon-48.png" alt="LOGO"> PrimeEnhancer: Amazon Prime Video Enhancer</h5>
+    <hr />
+    <h3>Permissions:</h3>
+    <div class="text-center">
+        <button id="allowAccessButton" class="btn btn-secondary w-100">Allow Access</button>
+    </div>
+    <br />
+
+    <h3>Delay Settings:</h3>
+    <div class="mb-3">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="nextUpToggle" checked>
+            <label class="form-check-label" for="nextUpToggle">Auto NextUp</label>
+        </div>
+        <div class="mb-3 d-flex align-items-center justify-content-between">
+            <label for="nextDelay" class="form-label">Next Button Delay (s): </label>
+            <input type="number" id="nextDelayValue" class="form-control w-25" value="5.0" step="0.1" min="0" max="10">
+        </div>
+        <input type="range" class="form-range" id="nextDelay" min="0" max="10" value="5" step="0.1">
+    </div>
+
+    <div class="mb-3">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="skipToggle" checked>
+            <label class="form-check-label" for="skipToggle">Auto Skip</label>
+        </div>
+        <div class="mb-3 d-flex align-items-center justify-content-between">
+            <label for="skipDelay" class="form-label me-2">Skip Button Delay (s): </label>
+            <input type="number" id="skipDelayValue" class="form-control w-25" value="0.0" step="0.1" min="0" max="5">
+        </div>
+        <input type="range" class="form-range" id="skipDelay" min="0" max="5" value="0" step="0.1">
+    </div>
+
+    <button id="applyButton" class="btn btn-primary w-100">Apply</button>
+
+    <p id="successMessage" class="success-message text-center">Settings applied!</p>
+    <p id="permissionMessage" class="permission-message"></p>
+
+    <footer>
+        <hr>
+        <p>Support us on:</p>
+        <a href="https://paypal.me/adn1337" target="_blank" class="btn btn-outline-secondary btn-sm">
+            <i class="fab fa-paypal"></i> PayPal
+        </a>
+        <a href="https://github.com/nizzion" target="_blank" class="btn btn-outline-secondary btn-sm">
+            <i class="fab fa-github"></i> GitHub
+        </a>
+        <a href="https://x.com/nizzion" target="_blank" class="btn btn-outline-secondary btn-sm">
+            <i class="fab fa-twitter"></i> X | Twitter
+        </a>
+        <a href="https://nizzion.com" target="_blank" class="btn btn-outline-secondary btn-sm">
+            <i class="fa-solid fa-globe"></i> Website
+        </a>
+    </footer>
+
+
+    <script src="popup.js"></script>
+</body>
+</html>
