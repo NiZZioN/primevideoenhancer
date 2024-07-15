@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PrimeAutoNext: Amazon Prime Video Enhancer",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "Automatically clicks the next episode or skip button after a set delay on Amazon Prime Video.",
   "permissions": [ 
     "notifications",
