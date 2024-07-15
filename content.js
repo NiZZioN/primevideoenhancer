@@ -131,7 +131,7 @@ const skipInterval = setInterval(() => {
 
 
 function init() {
-  if (document.body.querySelector('#dv-web-player')) {
+  if (document.body.querySelector('.dv-player-fullscreen')) {
     skipButtonClicked = false; // Reset the skip button clicked flag
     // Instantly check on page load if it exists
     onLoadCheck();
