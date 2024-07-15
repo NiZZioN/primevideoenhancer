@@ -1,4 +1,4 @@
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 let skipButtonClicked = false; // Flag to track if the skip button has been clicked
 
 function log(message) {
@@ -84,21 +84,27 @@ function onLoadCheck() {
 }
 
 function periodicSkipCheck() {
-  log("[PRIME Enhancer] >>> Periodic check for skip button.");
-  if (!skipButtonClicked) {
-    const skip = document.querySelector(".atvwebplayersdk-skipelement-button");
+  chrome.storage.sync.get(["skipEnabled"], (data) => {
+    if (chrome.runtime.lastError) {
+      console.error("[PRIME Enhancer] >>> Error retrieving data: ", chrome.runtime.lastError);
+      return;
+    }
 
-    chrome.storage.sync.get(["skipDelay", "skipEnabled"], (data) => {
-      if (chrome.runtime.lastError) {
-        console.error("[PRIME Enhancer] >>> Error retrieving data: ", chrome.runtime.lastError);
-        return;
-      }
+    if (data.skipEnabled && !skipButtonClicked) {
+      log("[PRIME Enhancer] >>> Periodic check for skip button.");
+      const skip = document.querySelector(".atvwebplayersdk-skipelement-button");
 
       if (skip) {
-        handleSkipButton(data);
+        chrome.storage.sync.get(["skipDelay"], (data) => {
+          if (chrome.runtime.lastError) {
+            console.error("[PRIME Enhancer] >>> Error retrieving data: ", chrome.runtime.lastError);
+            return;
+          }
+          handleSkipButton(data);
+        });
       }
-    });
-  }
+    }
+  });
 }
 
 
@@ -124,14 +130,19 @@ const skipInterval = setInterval(() => {
 }, 5000);
 
 
-// Instantly check on page load if it exists
-onLoadCheck();
+if (document.body.id === 'dv-web-player') {
+  // Instantly check on page load if it exists
+  onLoadCheck();
 
-// Observe for changes in the body
-observer.observe(document.body, {
-  attributes: true,
-  subtree: true,
-  attributeFilter: ["class"],
-});
+  // Observe for changes in the body
+  observer.observe(document.body, {
+    attributes: true,
+    subtree: true,
+    attributeFilter: ["class"],
+  });
 
-log("[PRIME Enhancer] >>> Initial script run");
+  // Start the periodic skip check
+  periodicSkipCheck();
+
+  log("[PRIME Enchancer] >>> Initial script run");
+}
