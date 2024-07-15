@@ -15,6 +15,24 @@ function clickButton(buttonClass, delay) {
   }
 }
 
+function handleNextUpCard(data) {
+  if (data.nextUpEnabled) {
+    log("[PRIME Enhancer] >>> Next up enabled + Next up card is showing");
+    const nextDelay = data.nextDelay || 5000; // Default to 5 seconds
+    log("[PRIME Enhancer] >>> Got next Delay: " + nextDelay);
+    clickButton("atvwebplayersdk-nextupcard-button", nextDelay);
+  }
+}
+
+function handleSkipButton(data) {
+  if (data.skipEnabled) {
+    log("[PRIME Enhancer] >>> Skip button is showing + Skip Enabled");
+    const skipDelay = data.skipDelay || 0; // Default to instant
+    log("[PRIME Enhancer] >>> Got Skip Delay: " + skipDelay);
+    clickButton("atvwebplayersdk-skipelement-button", skipDelay);
+  }
+}
+
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (mutation.type === "attributes") {
@@ -22,20 +40,10 @@ const observer = new MutationObserver((mutations) => {
       if (mutation.target.classList.contains("atvwebplayersdk-nextupcard-show")) {
         chrome.storage.sync.get(["nextDelay", "nextUpEnabled"], (data) => {
           if (chrome.runtime.lastError) {
-            console.error(
-              "[PRIME Enchancer] >>> Error retrieving data: ",
-              chrome.runtime.lastError
-            );
+            console.error("[PRIME Enhancer] >>> Error retrieving next up data: ", chrome.runtime.lastError);
             return;
           }
-          
-          // Check if next up is enabled
-          if (data.nextUpEnabled) {
-            log("[PRIME Enchancer] >>> Next up enabled + Next up card is showing");
-            const nextDelay = data.nextDelay || 5000; // Default to 5 seconds
-            log("[PRIME Enchancer] >>> Got next Delay: " + nextDelay);
-            clickButton("atvwebplayersdk-nextupcard-button", nextDelay);
-          }
+          handleNextUpCard(data);
         });
       }
 
@@ -43,20 +51,10 @@ const observer = new MutationObserver((mutations) => {
       if (mutation.target.classList.contains("atvwebplayersdk-skipelement-button")) {
         chrome.storage.sync.get(["skipDelay", "skipEnabled"], (data) => {
           if (chrome.runtime.lastError) {
-            console.error(
-              "[PRIME Enchancer] >>> Error retrieving data: ",
-              chrome.runtime.lastError
-            );
+            console.error("[PRIME Enhancer] >>> Error retrieving skip data: ", chrome.runtime.lastError);
             return;
           }
-          
-          // Check if skip is enabled
-          if (data.skipEnabled) {
-            log("[PRIME Enchancer] >>> Skip button is showing + Skip Enabled");
-            const skipDelay = data.skipDelay || 0; // Default to instant
-            log("[PRIME Enchancer] >>> Got Skip Delay: " + skipDelay);
-            clickButton("atvwebplayersdk-skipelement-button", skipDelay);
-          }
+          handleSkipButton(data);
         });
       }
     }
@@ -64,50 +62,27 @@ const observer = new MutationObserver((mutations) => {
 });
 
 function onLoadCheck() {
-  log("[PRIME Enchancer] >>> Instant check if skip or upnext already there.");
-  var skip = document.querySelector(".atvwebplayersdk-skipelement-button");
-  var next = document.querySelector(".atvwebplayersdk-nextupcard-show");
+  log("[PRIME Enhancer] >>> Instant check if skip or upnext already there.");
+  const skip = document.querySelector(".atvwebplayersdk-skipelement-button");
+  const next = document.querySelector(".atvwebplayersdk-nextupcard-show");
 
-  if (skip) {
-    chrome.storage.sync.get(["skipDelay", "skipEnabled"], (data) => {
-      if (chrome.runtime.lastError) {
-        console.error(
-          "[PRIME Enchancer] >>> Error retrieving data: ",
-          chrome.runtime.lastError
-        );
-        return;
-      }
-      
-      // Check if skip is enabled
-      if (data.skipEnabled) {
-        log("[PRIME Enchancer] >>> Skip enabled + Skip already onload.");
-        const skipDelay = data.skipDelay || 0; // Default to instant
-        clickButton("atvwebplayersdk-skipelement-button", skipDelay);
-      }
-    });
-  }
+  chrome.storage.sync.get(["skipDelay", "skipEnabled", "nextDelay", "nextUpEnabled"], (data) => {
+    if (chrome.runtime.lastError) {
+      console.error("[PRIME Enhancer] >>> Error retrieving data: ", chrome.runtime.lastError);
+      return;
+    }
 
-  if (next) {
-    chrome.storage.sync.get(["nextDelay", "nextUpEnabled"], (data) => {
-      if (chrome.runtime.lastError) {
-        console.error(
-          "[PRIME Enchancer] >>> Error retrieving data: ",
-          chrome.runtime.lastError
-        );
-        return;
-      }
-      
-      // Check if next up is enabled
-      if (data.nextUpEnabled) {
-        log("[PRIME Enchancer] >>> Next Up enabled + Next up already onload.");
-        const nextDelay = data.nextDelay || 5000; // Default to 5 seconds
-        clickButton("atvwebplayersdk-nextupcard-button", nextDelay);
-      }
-    });
-  }
+    if (skip) {
+      handleSkipButton(data);
+    }
+
+    if (next) {
+      handleNextUpCard(data);
+    }
+  });
 }
 
-//instantly check on page load if it exists
+// Instantly check on page load if it exists
 onLoadCheck();
 
 // Observe for changes in the body
@@ -117,4 +92,4 @@ observer.observe(document.body, {
   attributeFilter: ["class"],
 });
 
-log("[PRIME Enchancer] >>> Initial script run");
+log("[PRIME Enhancer] >>> Initial script run");
