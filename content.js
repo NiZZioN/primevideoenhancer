@@ -130,19 +130,52 @@ const skipInterval = setInterval(() => {
 }, 5000);
 
 
-if (document.body.id === 'dv-web-player') {
-  // Instantly check on page load if it exists
-  onLoadCheck();
+function init() {
+  if (document.body.querySelector('#dv-web-player')) {
+    skipButtonClicked = false; // Reset the skip button clicked flag
+    // Instantly check on page load if it exists
+    onLoadCheck();
 
-  // Observe for changes in the body
-  observer.observe(document.body, {
-    attributes: true,
-    subtree: true,
-    attributeFilter: ["class"],
-  });
+    // Observe for changes in the body
+    observer.observe(document.body, {
+      attributes: true,
+      subtree: true,
+      attributeFilter: ["class"],
+    });
 
-  // Start the periodic skip check
-  periodicSkipCheck();
+    // Start the periodic skip check
+    periodicSkipCheck();
 
-  log("[PRIME Enchancer] >>> Initial script run");
+    log("[PRIME Enchancer] >>> Initial script run");
+  }
 }
+
+function setupURLChangeListener() {
+  let currentURL = location.href;
+
+  const checkURLChange = () => {
+    if (location.href !== currentURL) {
+      currentURL = location.href;
+      observer.disconnect(); // Stop observing mutations on URL change
+      init(); // Re-initialize the script
+    }
+  };
+
+  // Override pushState and replaceState to detect URL changes
+  const pushState = history.pushState;
+  history.pushState = function() {
+    pushState.apply(history, arguments);
+    checkURLChange();
+  };
+
+  const replaceState = history.replaceState;
+  history.replaceState = function() {
+    replaceState.apply(history, arguments);
+    checkURLChange();
+  };
+
+  window.addEventListener('popstate', checkURLChange);
+}
+
+init();
+setupURLChangeListener();
