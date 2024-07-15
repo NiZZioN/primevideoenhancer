@@ -1,4 +1,5 @@
 const DEBUG_MODE = false;
+let skipButtonClicked = false; // Flag to track if the skip button has been clicked
 
 function log(message) {
   if (DEBUG_MODE) {
@@ -81,6 +82,47 @@ function onLoadCheck() {
     }
   });
 }
+
+function periodicSkipCheck() {
+  log("[PRIME Enhancer] >>> Periodic check for skip button.");
+  if (!skipButtonClicked) {
+    const skip = document.querySelector(".atvwebplayersdk-skipelement-button");
+
+    chrome.storage.sync.get(["skipDelay", "skipEnabled"], (data) => {
+      if (chrome.runtime.lastError) {
+        console.error("[PRIME Enhancer] >>> Error retrieving data: ", chrome.runtime.lastError);
+        return;
+      }
+
+      if (skip) {
+        handleSkipButton(data);
+      }
+    });
+  }
+}
+
+
+function resetSkipFlag() {
+  skipButtonClicked = false; // Reset the flag on page load or URL change
+  log("[PRIME Enhancer] >>> Skip flag reset.");
+}
+
+// Listen for URL changes
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "urlChanged") {
+    resetSkipFlag();
+    onLoadCheck();
+  }
+});
+
+const skipInterval = setInterval(() => {
+  if (!skipButtonClicked) {
+    periodicSkipCheck();
+  } else {
+    clearInterval(skipInterval); // Stop the interval once the skip button has been clicked
+  }
+}, 5000);
+
 
 // Instantly check on page load if it exists
 onLoadCheck();
